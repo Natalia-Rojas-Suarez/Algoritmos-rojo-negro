@@ -21,11 +21,11 @@ class ArbolNegroRojo {
 
     // Balancear arbol despues de la eliminacion
     void eliminarArreglar(NodoP x);
+    void nrTransplantar(NodoP u, NodoP v);
     void eliminar(NodoP nodo, int key);
 
     //Balancear el arbol despues de la insercion
     void balancear(NodoP k);
-
     void imprimir(NodoP root, string indent, bool last);
 
   public:

@@ -3,8 +3,77 @@
 using namespace std;
 
 
-/*void ArbolNegroRojo::eliminarArreglar(NodoP x) {
-}*/
+void ArbolNegroRojo::eliminarArreglar(NodoP x) {
+  NodoP s;
+  while (x != raiz && x->color == 0) {
+    if (x == x->padre->izquierdo) {
+      s = x->padre->derecho;
+      if (s->color == 1) {
+        s->color = 0;
+        x->padre->color = 1;
+        rotarIzquierda(x->padre);
+        s = x->padre->derecho;
+      }
+
+      if (s->izquierdo->color == 0 && s->derecho->color == 0) {
+        s->color = 1;
+        x = x->padre;
+      } else {
+        if (s->derecho->color == 0) {
+          s->izquierdo->color = 0;
+          s->color = 1;
+          rotarDerecha(s);
+          s = x->padre->derecho;
+        }
+
+        s->color = x->padre->color;
+        x->padre->color = 0;
+        s->derecho->color = 0;
+        rotarIzquierda(x->padre);
+        x = raiz;
+      }
+    } else {
+      s = x->padre->izquierdo;
+      if (s->color == 1) {
+        s->color = 0;
+        x->padre->color = 1;
+        rotarDerecha(x->padre);
+        s = x->padre->izquierdo;
+      }
+
+      if (s->derecho->color == 0 && s->derecho->color == 0) {
+        s->color = 1;
+        x = x->padre;
+      } else {
+        if (s->izquierdo->color == 0) {
+          s->derecho->color = 0;
+          s->color = 1;
+          rotarIzquierda(s);
+          s = x->padre->izquierdo;
+        }
+
+        s->color = x->padre->color;
+        x->padre->color = 0;
+        s->izquierdo->color = 0;
+        rotarDerecha(x->padre);
+        x = raiz;
+      }
+    }
+  }
+  x->color = 0;
+}
+
+
+void ArbolNegroRojo::nrTransplantar(NodoP u, NodoP v) {
+  if (u->padre == 0) {
+    raiz = v;
+  } else if (u == u->padre->izquierdo) {
+    u->padre->izquierdo = v;
+  } else {
+    u->padre->derecho = v;
+  }
+  v->padre = u->padre;
+}
 
 
 void ArbolNegroRojo::eliminar(NodoP nodo, int key) {
@@ -140,16 +209,84 @@ NodoP ArbolNegroRojo::minimo(NodoP nodo) {
 }
 
 
-/*void ArbolNegroRojo::rotarIzquierda(NodoP x) {
-}*/
+void ArbolNegroRojo::rotarIzquierda(NodoP x) {
+  NodoP y = x->derecho;
+  x->derecho = y->izquierdo;
+  if (y->izquierdo != Null) {
+    y->izquierdo->padre = x;
+  }
+  y->padre = x->padre;
+  if (x->padre == 0) {
+    this->raiz = y;
+  } else if (x == x->padre->izquierdo) {
+    x->padre->izquierdo = y;
+  } else {
+    x->padre->derecho = y;
+  }
+  y->izquierdo = x;
+  x->padre = y;
+}
 
 
-/*void ArbolNegroRojo::rotarDerecha(NodoP x) {
-}*/
+void ArbolNegroRojo::rotarDerecha(NodoP x) {
+  NodoP y = x->izquierdo;
+  x->izquierdo = y->derecho;
+  if (y->derecho != Null) {
+    y->derecho->padre = x;
+  }
+  y->padre = x->padre;
+  if (x->padre == 0) {
+    this->raiz = y;
+  } else if (x == x->padre->derecho) {
+    x->padre->derecho = y;
+  } else {
+    x->padre->izquierdo = y;
+  }
+  y->derecho = x;
+  x->padre = y;
+}
 
 
-/*void ArbolNegroRojo::insertar(int numero) {
-}*/
+void ArbolNegroRojo::insertar(int numero) {
+  NodoP nodo = new Nodo;
+  nodo->padre = Null;
+  nodo->dato = numero;
+  nodo->izquierdo = Null;
+  nodo->derecho = Null;
+  nodo->color = 1;
+
+  NodoP y = 0;
+  NodoP x = this->raiz;
+
+  while (x != Null) {
+    y = x;
+    if (nodo->dato < x->dato) {
+      x = x->izquierdo;
+    } else {
+      x = x->derecho;
+    }
+  }
+
+  nodo->padre = y;
+  if (y == 0) {
+    raiz = nodo;
+  } else if (nodo->dato < y->dato) {
+    y->izquierdo = nodo;
+  } else {
+    y->derecho = nodo;
+  }
+
+  if (nodo->padre == 0) {
+    nodo->color = 0;
+    return;
+  }
+
+  if (nodo->padre->padre == 0) {
+    return;
+  }
+
+  balancear(nodo);
+}
 
 
 void ArbolNegroRojo::eliminarNodo(int data) {
